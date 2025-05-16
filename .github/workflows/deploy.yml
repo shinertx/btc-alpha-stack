@@ -1,0 +1,25 @@
+# .github/workflows/deploy.yml
+name: CI/CD
+on: [push]
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint & Type-check
+        run: |
+          black --check .
+          mypy .
+      - name: Run Tests
+        run: pytest --maxfail=1 --disable-warnings -q
+      - name: Build & Push Docker
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: gcr.io/$GCP_PROJECT/btc-alpha-stack:latest
+      - name: Deploy to GCP Cloud Run
+        run: |
+          gcloud run deploy btc-alpha-stack \
+            --image gcr.io/$GCP_PROJECT/btc-alpha-stack:latest \
+            --platform managed \
+            --region $GCP_REGION

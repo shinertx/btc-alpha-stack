@@ -1,0 +1,14 @@
+# config.yaml
+rpc_endpoints:
+  mainnet: https://...   # ≤100 ms latency
+credentials:
+  coinbase_api_key: 
+  sendgrid_api_key:
+thresholds:
+  module_drawdown: 0.20
+  portfolio_drawdown: 0.35
+  ruin_probability: 0.25
+flags:
+  --json: false
+  --shadow: false
+…
